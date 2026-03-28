@@ -11,12 +11,17 @@ import { LikedComponent } from './pages/liked/liked.component';
 import { authGuard } from './auth.guard';
 import { UserOrdersComponent } from './pages/user-orders/user-orders.component';
 import { ProfileSettingsComponent } from './pages/profile-settings/profile-settings.component';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { RegisterComponent } from './pages/auth/register/register.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'store', component: StoreComponent},
     {path: 'about', component: AboutComponent},
     {path: 'contact', component: ContactComponent},
+
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
 
     {path: 'profile', component: ProfileComponent},
     {path: 'cart', component: CartComponent},
@@ -29,5 +34,6 @@ export const routes: Routes = [
             { path: 'orders', component: UserOrdersComponent }
         ]
     },
+    
     {path: 'product/:id', component: ProductDetailComponent},
 ];

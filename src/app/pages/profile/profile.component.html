@@ -1,19 +1,11 @@
-<div class="profile-container">
-  <aside class="profile-sidebar">
-    <!-- <div class="user-info">
-      <img [src]="user.avatarUrl || 'assets/default-avatar.png'" alt="Avatar">
-      <h2>{{ user.name }}</h2>
-      <p>{{ user.email }}</p>
-    </div> -->
-    
-    <nav class="profile-nav">
-      <a routerLink="settings" routerLinkActive="active">Settings</a>
-      <a routerLink="orders" routerLinkActive="active">My Orders</a>
-      <!-- <button (click)="logout()">Logout</button> -->
-    </nav>
-  </aside>
+<main>
+    <div *ngIf="user()" class="profile-card">
+    <h1>Welcome, {{ user().name }}!</h1>
+    <p>Email: {{ user().email }}</p>
+    <button (click)="onLogout()">Exit</button>
+    </div>
 
-  <main class="profile-content">
-    <router-outlet></router-outlet> 
-  </main>
-</div>
+    <div *ngIf="!user()">
+    <p>Please, log in to see your profile.</p>
+    </div>
+</main>
