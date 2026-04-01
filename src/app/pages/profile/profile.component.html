@@ -1,0 +1,11 @@
+<main>
+    <div *ngIf="user()" class="profile-card">
+    <h1>Welcome, {{ user().name }}!</h1>
+    <p>Email: {{ user().email }}</p>
+    <button (click)="onLogout()">Exit</button>
+    </div>
+
+    <div *ngIf="!user()">
+    <p>Please, log in to see your profile.</p>
+    </div>
+</main>
