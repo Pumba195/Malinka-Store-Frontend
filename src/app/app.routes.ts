@@ -1,16 +1,16 @@
 import { NgModel } from '@angular/forms';
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { StoreComponent } from './pages/store/store.component';
-import { AboutComponent } from './pages/about/about.component';
-import { ContactComponent } from './pages/contact/contact.component';
-import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { CartComponent } from './pages/cart/cart.component';
-import { LikedComponent } from './pages/liked/liked.component';
+import { HomeComponent } from './pages/main/home/home.component';
+import { StoreComponent } from './pages/products/store/store.component';
+import { AboutComponent } from './pages/main/about/about.component';
+import { ContactComponent } from './pages/main/contact/contact.component';
+import { ProductDetailComponent } from './pages/products/product-detail/product-detail.component';
+import { ProfileComponent } from './pages/account/profile/profile.component';
+import { CartComponent } from './pages/products/cart/cart.component';
+import { LikedComponent } from './pages/products/liked/liked.component';
 import { authGuard } from './auth.guard';
-import { UserOrdersComponent } from './pages/user-orders/user-orders.component';
-import { ProfileSettingsComponent } from './pages/profile-settings/profile-settings.component';
+import { UserOrdersComponent } from './pages/account/user-orders/user-orders.component';
+import { ProfileSettingsComponent } from './pages/account/profile-settings/profile-settings.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 
