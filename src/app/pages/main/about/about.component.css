@@ -16,9 +16,9 @@
     color: #1a1a1a;
 }
 
-.about-header h1 span {
+/* .about-header h1 span {
     color: #f10020;
-}
+} */
 
 .subtitle {
     color: #888;
@@ -85,7 +85,7 @@
 
 .tech-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 0 15px #f10020;
+    box-shadow: 0 0 15px #1a1a1a;
 }
 
 .tech-icon {

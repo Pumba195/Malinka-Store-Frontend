@@ -3,7 +3,7 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +17,7 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cartService = inject(CartService);
 
   protected errorMessage = '';
   protected loading = false;
@@ -40,6 +41,9 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
           this.loading = false;
+
+          this.cartService.loadCart();
+
           this.router.navigate(['/profile']);
         },
         error: (err) => {

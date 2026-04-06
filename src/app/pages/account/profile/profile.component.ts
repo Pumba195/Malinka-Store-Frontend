@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,10 +13,12 @@ import { AuthService } from '../../../services/auth.service';
 
 export class ProfileComponent {
   private authService = inject(AuthService);
+  private cartService = inject(CartService);
   
-  user = this.authService.currentUser; 
+  user = this.authService.currentUser;
 
   onLogout() {
     this.authService.logout();
+    this.cartService.clearCart();
   }
 }
