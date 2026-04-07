@@ -17,11 +17,17 @@
           <img [src]="product.imageUrl || './misc/no-image.png'" alt="{{product.title}}">
         </div>
         <div class="product-info">
-          <h3 class="product-name">{{product.title}}</h3>
-          <p class="product-price">{{product.price | currency}}</p>
-          <button class="favorite-badge" (click)="toggleLike($event, product._id)">
-            <img [class]="productsService.isFavorite(product._id) ? 'fas fa-heart' : 'far fa-heart'" src="./icons/Heart.png" alt="Like">
-          </button>
+          <div class="high-part">
+            <div class="title-and-price">
+              <h3 class="product-title">{{product.title}}</h3>
+              <p class="product-price">{{product.price | currency}}</p>
+            </div>
+            <a class="favorite-badge" (click)="toggleLike($event, product._id)">
+              <p [class]="productsService.isFavorite(product._id) ? 'fas fa-heart' : 'far fa-heart'">{{
+                productsService.isFavorite(product._id) ? '♥' : '♡' }}</p>
+            </a>
+          </div>
+
 
           <!-- <div class="favorite-badge" (click)="toggleLike($event, product._id)">
             <i [class]="productsService.isFavorite(product._id) ? 'fas fa-heart' : 'far fa-heart'">Like</i>
@@ -33,5 +39,13 @@
       </a>
     </div>
     }
+  </div>
+  <div *ngIf="showToast" class="simple-toast" [class.error]="isError">
+    <span class="toast-icon">{{ isError ? '⚠️' : '🍓' }}</span>
+
+    <span class="message-text">
+      {{ toastMessage }}
+      <strong *ngIf="clickCount > 1" class="count-badge">x{{ clickCount }}</strong>
+    </span>
   </div>
 </main>

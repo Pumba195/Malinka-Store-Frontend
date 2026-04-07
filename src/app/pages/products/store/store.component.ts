@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from "@angular/router";
 import { PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common'
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-shop',
@@ -16,8 +17,15 @@ import { isPlatformBrowser } from '@angular/common'
 export class StoreComponent implements OnInit {
   constructor(
     protected readonly productsService: ProductsService,
-    private readonly cartService: CartService
+    private readonly cartService: CartService,
+    private readonly authService: AuthService,
   ) { }
+
+  showToast = false;
+  toastMessage = '';
+  isError = false;
+  clickCount = 0;
+  toastTimeout: any;
 
   products: any[] = [];
   errorMessage: string = "";
@@ -27,7 +35,37 @@ export class StoreComponent implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.getProducts();
+      // if (this.authService.isLoggedIn()) {
+      //   this.productsService.loadFullFavorites();
+      // }
     }
+  }
+
+  showToastNotification(message: string, error: boolean = false) {
+    if (error) {
+      this.isError = true;
+      this.toastMessage = message;
+      this.clickCount = 0;
+    } else {
+      this.isError = false;
+      if (this.showToast && this.toastMessage.includes(message)) {
+        this.clickCount++;
+      } else {
+        this.toastMessage = message;
+        this.clickCount = 1;
+      }
+    }
+
+    this.showToast = true;
+
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+
+    this.toastTimeout = setTimeout(() => {
+      this.showToast = false;
+      this.clickCount = 0;
+    }, 3000);
   }
 
   getProducts() {
@@ -51,8 +89,20 @@ export class StoreComponent implements OnInit {
   addToCart(event: Event, productId: string) {
     event.preventDefault();
     event.stopPropagation();
-    event.stopImmediatePropagation();
-    this.cartService.addToCart(productId, 1).subscribe({});
+
+    if (!this.authService.isLoggedIn()) {
+      this.showToastNotification('Please log in to add items!', true);
+      return;
+    }
+
+    this.cartService.addToCart(productId, 1).subscribe({
+      next: () => {
+        this.showToastNotification('Added to Malinka cart! 🍓');
+      },
+      error: () => {
+        this.showToastNotification('Something went wrong...', true);
+      }
+    });
   }
 
   removeProduct(id: string) {
@@ -64,7 +114,7 @@ export class StoreComponent implements OnInit {
   toggleLike(event: Event, productId: string) {
     event.preventDefault();
     event.stopPropagation();
-    event.stopImmediatePropagation(); 
-    this.productsService.toggleFavorite(productId).subscribe({});
+    event.stopImmediatePropagation();
+    this.productsService.toggleFavorite(productId);
   }
 }

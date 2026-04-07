@@ -13,30 +13,17 @@ import { isPlatformBrowser } from '@angular/common'
 })
 export class LikedComponent implements OnInit {
   private productsService = inject(ProductsService);
-  private cartService = inject(CartService);
-
-  likedItems = signal<any[]>([]);
+  
   private platformId = inject(PLATFORM_ID);
+  items = this.productsService.favoriteItems;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.loadFavorites();
+      this.productsService.getFullFavorites();
     }
   }
 
-  loadFavorites() {
-    this.productsService.getFullFavorites().subscribe({
-      next: (data) => this.likedItems.set(data),
-      error: (err) => console.error(err)
-    });
-  }
-
   toggleLike(productId: string) {
-    this.productsService.toggleFavorite(productId).subscribe({
-        next: () => {
-            this.likedItems.set(this.likedItems().filter(item => item._id !== productId));
-        }
-    });
+    this.productsService.toggleFavorite(productId);
   }
-
 }
