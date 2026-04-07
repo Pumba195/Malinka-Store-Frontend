@@ -1,33 +1,82 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
+import { CartService } from '../../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from "@angular/router";
+import { PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common'
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-shop',
+  standalone: true,
   imports: [RouterLink, CommonModule],
   templateUrl: './store.component.html',
   styleUrl: './store.component.css'
 })
-export class StoreComponent {
-  constructor(private readonly productsService: ProductsService){}
+export class StoreComponent implements OnInit {
+  constructor(
+    protected readonly productsService: ProductsService,
+    private readonly cartService: CartService,
+    private readonly authService: AuthService,
+  ) { }
+
+  showToast = false;
+  toastMessage = '';
+  isError = false;
+  clickCount = 0;
+  toastTimeout: any;
 
   products: any[] = [];
   errorMessage: string = "";
 
+  private platformId = inject(PLATFORM_ID);
+
   ngOnInit() {
-    this.getProducts();
+    if (isPlatformBrowser(this.platformId)) {
+      this.getProducts();
+      // if (this.authService.isLoggedIn()) {
+      //   this.productsService.loadFullFavorites();
+      // }
+    }
   }
-  
+
+  showToastNotification(message: string, error: boolean = false) {
+    if (error) {
+      this.isError = true;
+      this.toastMessage = message;
+      this.clickCount = 0;
+    } else {
+      this.isError = false;
+      if (this.showToast && this.toastMessage.includes(message)) {
+        this.clickCount++;
+      } else {
+        this.toastMessage = message;
+        this.clickCount = 1;
+      }
+    }
+
+    this.showToast = true;
+
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+
+    this.toastTimeout = setTimeout(() => {
+      this.showToast = false;
+      this.clickCount = 0;
+    }, 3000);
+  }
+
   getProducts() {
     this.productsService.getAllProducts().subscribe({
       next: (response) => {
-        if(response) {
+        if (response) {
           this.products = response;
           this.errorMessage = "";
         } else {
           this.products = [];
-          this.errorMessage = response.Error || "No results";
+          this.errorMessage = "No results";
         }
       },
       error: () => {
@@ -37,12 +86,35 @@ export class StoreComponent {
     })
   }
 
-  removeProduct(id: string) {
-    this.productsService.deleteProduct(id).subscribe({})
+  addToCart(event: Event, productId: string) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!this.authService.isLoggedIn()) {
+      this.showToastNotification('Please log in to add items!', true);
+      return;
+    }
+
+    this.cartService.addToCart(productId, 1).subscribe({
+      next: () => {
+        this.showToastNotification('Added to Malinka cart! 🍓');
+      },
+      error: () => {
+        this.showToastNotification('Something went wrong...', true);
+      }
+    });
   }
 
-  addToCart(id: string) {
-    return
+  removeProduct(id: string) {
+    this.productsService.deleteProduct(id).subscribe({
+      next: () => this.getProducts()
+    })
   }
-  
+
+  toggleLike(event: Event, productId: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    this.productsService.toggleFavorite(productId);
+  }
 }

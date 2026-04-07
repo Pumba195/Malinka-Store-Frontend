@@ -51,10 +51,6 @@ header::before {
     opacity: 0.5;
 }
 
-
-
-
-
 .mian-nav {
     display: flex;
     align-items: center;
@@ -73,10 +69,6 @@ header::before {
     z-index: 1000;
     transition: transform 0.4s ease-in-out, background 0.3s;
 }
-
-
-
-
 
 .logo {
     padding: 10px 40px;
@@ -98,10 +90,6 @@ header::before {
 .logo:hover {
     transform: scale(1.05);
 }
-
-
-
-
 
 .central-menu {
     flex: 2;
@@ -150,10 +138,6 @@ header::before {
     box-shadow: 0 0 15px rgba(253, 89, 73, 0.3);
 } */
 
-
-
-
-
 .right-menu-icons {
     flex: 1;
     list-style: none;
@@ -179,10 +163,6 @@ header::before {
     transform: translateY(-1px);
 }
 
-
-
-
-
 .nav-hidden {
     transform: translateY(-100%);
 }
@@ -191,9 +171,6 @@ header::before {
     transform: translateY(0);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
-
-
-
 
 .right-menu-icons .profile.logged-in {
     filter: brightness(0) invert(1) drop-shadow(0 0 5px #ff0022);

@@ -60,7 +60,7 @@ a {
     gap: 4px;
 }
 
-.product-name {
+.product-title {
     margin: 0;
     font-size: 1.25rem;
     color: #333;
@@ -78,15 +78,16 @@ a {
     padding: 10px;
     border: none;
     border-radius: 8px;
-    background: linear-gradient(to right, #d90000, #b4012b);
+    background: #b4012b;
     color: #fff;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s;
+    transition: all 0.3s ease;
 }
 
 .btn-cart:hover {
-    background: linear-gradient(to right, #ef0038, #e70101);
+    background: #d0001c;
+    box-shadow: 0 0 5px #d0001c;
 }
 
 .status-message {
@@ -103,3 +104,100 @@ a {
     height: 60px;
     width: auto;
 }
+
+.favorite-badge img {
+    height: 24px;
+    width: auto;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+.high-part{
+    display: flex;
+    justify-content: space-between;
+}
+
+.title-and-price{
+    cursor: pointer;
+}
+
+.fa-heart{
+    font-size: 40px;
+    text-decoration: none;
+    color: #f10020;
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fa-heart:hover{
+    color: #f10020dc
+}
+
+
+
+
+
+.simple-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #f10020;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(241, 0, 32, 0.3);
+  
+  animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.simple-toast.error {
+  background: #333;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) translateY(0);
+    opacity: 1;
+  }
+}
+
+.count-badge {
+    background: white;
+    color: #f10020;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 10px;
+    font-size: 0.9rem;
+    display: inline-block;
+    animation: pop 0.2s ease-out;
+}
+
+.simple-toast.error .count-badge {
+    color: #333;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+.message-text {
+    display: flex;
+    align-items: center;
+}   

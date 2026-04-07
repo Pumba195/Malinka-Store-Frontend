@@ -3,7 +3,8 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-
+import { CartService } from '../../../services/cart.service';
+import { ProductsService } from '../../../services/products.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-
+  private cartService = inject(CartService);
+  private productsService = inject(ProductsService);
   protected errorMessage = '';
   protected loading = false;
 
@@ -26,7 +28,7 @@ export class RegisterComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
-  
+
   onSubmit() {
     this.errorMessage = '';
 
@@ -34,24 +36,28 @@ export class RegisterComponent {
       this.registerForm.markAllAsTouched();
       return;
     }
-    
+
     if (this.registerForm.valid) {
       this.loading = true;
-      
+
       this.authService.register(this.registerForm.value).subscribe({
         next: () => {
-          this.loading = false; 
+          this.loading = false;
+
+          this.cartService.loadCart();
+          this.productsService.getFullFavorites();
+
           this.router.navigate(['/profile']);
         },
         error: (err) => {
-          this.loading = false; 
+          this.loading = false;
           this.errorMessage = "Registration failed: " + (err.error?.message || 'Unknown error');
         }
       });
     }
   }
 
-  get f() { 
-    return this.registerForm.controls as any; 
+  get f() {
+    return this.registerForm.controls as any;
   }
 }

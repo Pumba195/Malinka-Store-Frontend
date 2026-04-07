@@ -8,7 +8,7 @@ import { ProductDetailComponent } from './pages/products/product-detail/product-
 import { ProfileComponent } from './pages/account/profile/profile.component';
 import { CartComponent } from './pages/products/cart/cart.component';
 import { LikedComponent } from './pages/products/liked/liked.component';
-import { authGuard } from './auth.guard';
+import { authGuard } from './interceptors/auth.guard';
 import { UserOrdersComponent } from './pages/account/user-orders/user-orders.component';
 import { ProfileSettingsComponent } from './pages/account/profile-settings/profile-settings.component';
 import { LoginComponent } from './pages/auth/login/login.component';
