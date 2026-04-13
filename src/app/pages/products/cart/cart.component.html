@@ -20,7 +20,8 @@
     </div>
     } @else {
 
-    @for (item of items(); track item) {
+    @for (item of items(); track (item?.productId?._id || $index)) {
+    @if (item && item.productId) {
     <div class="cart-item-row">
       <a [routerLink]="['/product', item.productId._id]">
         <div class="item-img-wrapper">
@@ -42,9 +43,22 @@
         <span class="item-total-price">
           {{ (item.productId.price * item.quantity) | currency }}
         </span>
-        <button (click)="removeFromCart(item.productId._id)" class="remove-btn" title="Remove all units">✕</button>
+        <button (click)="removeFromCart(item)" class="remove-btn" title="Remove all units">✕</button>
       </div>
     </div>
+    } @else {
+    <div class="cart-item-row item-not-found">
+      <div class="item-details">
+        <p class="product-title" style="color: #d9534f;">⚠️ Product no longer available</p>
+        <p class="product-price-info">This item was removed from the store catalog.</p>
+      </div>
+      <div class="item-actions">
+        <span class="qty-number">Quantity: {{ item?.quantity || 0 }}</span>
+        <button (click)="removeFromCart(item)" class="remove-btn"
+          title="Remove broken item">✕</button>
+      </div>
+    </div>
+    }
     }
 
     @if (items().length > 0) {

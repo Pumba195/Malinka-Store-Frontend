@@ -16,9 +16,12 @@ export class ProductsService {
   private favorites = signal<ProductItem[]>([]);
   public isLoading = signal<boolean>(false);
 
-  getAllProducts(): Observable<any> {
-    return this.http.get<any>(`${this.apiURL}/products`);
+  getAllProducts(limit: number = 15, offset: number = 0, sort: string = 'newest', search: string = '') {
+    return this.http.get<ProductItem[]>(
+      `${this.apiURL}/products?limit=${limit}&offset=${offset}&sort=${sort}&search=${search}`
+    );
   }
+
   deleteProduct(id: string) {
     return this.http.delete(`${this.apiURL}/products/${id}`);
   }

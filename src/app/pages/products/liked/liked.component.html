@@ -19,7 +19,7 @@
             <button routerLink="/store" class="store-link btn">Explore Store</button>
         </div>
         } @else {
-        @for (product of items(); track product) {
+        @for (product of items(); track product._id) {
         <div class="liked-item-row">
             <a [routerLink]="['/product', product._id]" class="item-link">
                 <div class="item-img-wrapper">
@@ -33,7 +33,11 @@
                 </div>
             </a>
             <div class="item-actions">
-                <button (click)="toggleLike(product._id)" class="remove-btn like-active" title="Remove from wishlist">
+                <button class="btn-cart btn" (click)="addToCart($event, product)">
+                    Add to cart
+                </button>
+
+                <button (click)="toggleLike(product.title, product._id)" class="remove-btn like-active" title="Remove from wishlist">
                     <p class="fas fa-heart">❤</p>
                 </button>
             </div>

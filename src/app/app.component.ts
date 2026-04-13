@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ToastService } from './services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +12,5 @@ import { FooterComponent } from './components/footer/footer.component';
 })
 
 export class AppComponent {
-  title = 'Malinka';
+  public toast = inject(ToastService);
 }

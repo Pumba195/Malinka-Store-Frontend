@@ -10,37 +10,43 @@
     <div class="filter-controls">
       <div class="input-wrapper">
         <label class="floating-label">Sort by</label>
-        <select class="select-input select input-fiel">
+        <select class="select-input select input-fiel" (change)="onSortChange($event)">
           <option value="newest">Newest first</option>
-          <option value="price-low">Price: Low to High</option>
-          <option value="price-high">Price: High to Low</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
         </select>
       </div>
 
       <div class="input-wrapper">
         <label class="floating-label">Items per page</label>
         <select (change)="onLimitChange($event)" class="select-input select limit-select input-field">
-          <option value="8">15</option>
-          <option value="16">30</option>
-          <option value="32">60</option>
+          <option value="15">15</option>
+          <option value="30">30</option>
+          <option value="60">60</option>
         </select>
       </div>
+    </div>
+    <div class="pagination">
+      <button [disabled]="currentPage === 1" (click)="changePage(-1)" class="page-btn">←</button>
+      <span class="page-info">Page <strong>{{currentPage}}</strong></span>
+      <button [disabled]="products().length < currentLimit" (click)="changePage(1)" class="page-btn">→</button>
     </div>
   </div>
 
   @if (errorMessage) {
   <p class="status-message error">{{errorMessage}}</p>
   }
-
-  @if (products.length === 0 && !errorMessage) {
+  @else if (isLoading && products().length === 0 && !errorMessage) {
   <p class="status-message loading">
     <img src="./icons/loading.gif" alt="loading">
   </p>
-  }
-
+  } @else {
   <div class="product-grid">
-    @for (product of products; track product) {
+    @for (product of filteredProducts(); track product._id) {
     <div class="product-card">
+      @if (isNew(product.createdAt)) {
+      <span class="new-badge">New</span>
+      }
       <a [routerLink]="['/product', product._id]">
         <div class="product-image">
           <img [src]="product.imageUrl || './misc/no-image.png'" alt="{{product.title}}">
@@ -59,33 +65,23 @@
             </a>
           </div>
 
-          <button class="btn-cart" (click)="addToCart($event, product)">
+          <button class="btn-cart btn" (click)="addToCart($event, product)">
             Add to cart
           </button>
         </div>
       </a>
     </div>
+    } @empty {
+    <p class="status-message ">Nothing found for "{{searchQuery()}}"</p>
     }
   </div>
+  }
 
-  @if (products.length > 0) {
+  @if (products().length > 0) {
   <div class="pagination">
     <button [disabled]="currentPage === 1" (click)="changePage(-1)" class="page-btn">←</button>
     <span class="page-info">Page <strong>{{currentPage}}</strong></span>
-    <button [disabled]="products.length < currentLimit" (click)="changePage(1)" class="page-btn">→</button>
+    <button [disabled]="products().length < currentLimit" (click)="changePage(1)" class="page-btn">→</button>
   </div>
   }
-
-  @if (showToast) {
-  <div class="simple-toast" [class.error]="isError">
-    <span class="toast-icon">{{ isError ? '⚠️' : '🍓' }}</span>
-    <span class="message-text">
-      {{ toastMessage }}
-      @if (clickCount > 1) {
-      <strong class="count-badge">x{{ clickCount }}</strong>
-      }
-    </span>
-  </div>
-  }
-
 </main>

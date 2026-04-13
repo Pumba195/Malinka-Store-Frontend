@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CartService } from '../../../services/cart.service';
 import { isPlatformBrowser } from '@angular/common';
+import { CartItem } from '../../../models/cart-item.model';
 
 @Component({
   selector: 'app-cart',
@@ -27,13 +28,20 @@ export class CartComponent implements OnInit {
     }
   }
 
-  updateQuantity(productId: string, change: number): void {
+  updateQuantity(productId: string | undefined, change: number): void {
+    if (!productId) {
+      console.warn('Cannot update quantity: Product ID is missing (item might be deleted from store)');
+      return;
+    }
     this.cartService.updateQuantity(productId, change);
   }
 
-  removeFromCart(productId: string): void {
-    if (confirm('Do you want to remove this product entirely?')) {
-      this.cartService.removeFromCart(productId);
+  removeFromCart(item: CartItem): void {
+    const idToRemove = item._id;
+
+    if (confirm('Do you want to remove this item?')) {
+      // Передаем именно внутренний ID записи
+      this.cartService.removeFromCart(idToRemove);
     }
   }
 

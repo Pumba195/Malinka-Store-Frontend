@@ -13,18 +13,20 @@
 }
 
 .product-card {
-    background: #ffffff;
+    background: #1a1a1a;
+    /* border: 1px solid #333; */
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
 a {
@@ -53,34 +55,26 @@ a {
 .product-title {
     margin: 0;
     font-size: 1.25rem;
-    color: #333;
+    color: white;
 }
 
 .product-price {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #b4012b;
+    color: #f10020;
     margin: 0;
 }
 
 .btn-cart {
     margin-top: 25px;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: #b4012b;
-    color: #fff;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
 }
 
 .btn-cart:hover {
-    background: #d0001c;
-    box-shadow: 0 0 5px #d0001c;
+    transform: translateY(0);
 }
 
 .status-message {
+    grid-column: 1 / -1;
     text-align: center;
     padding: 20px;
     font-size: 1.1rem;
@@ -93,6 +87,26 @@ a {
 .loading img {
     height: 60px;
     width: auto;
+}
+
+.new-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    left: auto;
+
+    background: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    z-index: 10;
+    pointer-events: none;
 }
 
 .favorite-badge img {
@@ -121,90 +135,8 @@ a {
 }
 
 .fa-heart:hover {
-    color: #f10020dc;
-    filter: drop-shadow(0 0 5px rgba(241, 0, 32, 0.8));
+    filter: drop-shadow(0 0 12px rgb(255, 255, 255));
 }
-
-
-
-
-
-.simple-toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #f10020;
-    color: white;
-    padding: 16px 24px;
-    border-radius: 12px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 500;
-    box-shadow: 0 10px 25px rgba(241, 0, 32, 0.3);
-
-    animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.simple-toast.error {
-    background: #333;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-.toast-icon {
-    font-size: 1.2rem;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%) translateY(20px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0) translateY(0);
-        opacity: 1;
-    }
-}
-
-.count-badge {
-    background: white;
-    color: #f10020;
-    padding: 2px 8px;
-    border-radius: 20px;
-    margin-left: 10px;
-    font-size: 0.9rem;
-    display: inline-block;
-    animation: pop 0.2s ease-out;
-}
-
-.simple-toast.error .count-badge {
-    color: #333;
-}
-
-@keyframes pop {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.4);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-.message-text {
-    display: flex;
-    align-items: center;
-}
-
-
-
-
 
 
 
@@ -231,6 +163,7 @@ a {
 .input-field {
     background-color: #1a1a1a;
     height: 44px;
+    border: 1px solid #555;
 }
 
 .search-box {
@@ -261,7 +194,7 @@ a {
     margin-top: 40px;
     padding: 20px;
     background: #1a1a1a;
-    max-width: 200px;
+    width: fit-content;
     border-radius: 12px;
 
     margin: 40px auto 0 auto;
@@ -269,7 +202,7 @@ a {
 
 .page-btn {
     background: #242424;
-    border: 1px solid #333;
+    border: 1px solid #555;
     color: white;
     padding: 10px 20px 12px 20px;
     border-radius: 8px;
@@ -331,7 +264,7 @@ a {
 select.select-input {
     width: 100%;
     background: transparent;
-    border: 1px solid #333;
+    border: 1px solid #555;
     border-radius: 8px;
     padding: 12px;
     color: white;
@@ -350,8 +283,19 @@ select.select-input {
 
 .input-wrapper:focus-within select.select-input {
     border-color: #f10020;
+    color: #f10020;
 }
 
 select.select-input:focus-within {
     color: #f10020;
+}
+
+.shop-toolbar .pagination {
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+.shop-toolbar .pagination button{
+    background: #1a1a1a;
+    height: 44px;
 }
