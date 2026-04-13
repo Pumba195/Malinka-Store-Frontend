@@ -1,5 +1,4 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CartItem } from '../models/cart-item.model';
 import { tap } from 'rxjs/operators';
@@ -7,26 +6,23 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private platformId = inject(PLATFORM_ID);
   private http = inject(HttpClient);
-
   private apiUrl = 'http://localhost:3000/cart';
-  private cartItems = signal<CartItem[]>([]);
 
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.loadCart();
-    }
-  }
+  private cartItems = signal<CartItem[]>([]);
+  public isLoading = signal<boolean>(false);
 
   totalCount = computed(() =>
-    this.cartItems().reduce((acc, item) => acc + item.quantity, 0)
+    this.cartItems().reduce((acc, item) => acc + (item?.quantity || 0), 0)
   );
 
   totalPrice = computed(() =>
-    this.items().reduce((acc, item) =>
-      acc + (item.productId.price * item.quantity), 0
-    )
+    this.cartItems().reduce((acc, item) => {
+      if (item && item.productId && item.productId.price) {
+        return acc + (item.productId.price * item.quantity);
+      }
+      return acc;
+    }, 0)
   );
 
   get items() {
@@ -34,45 +30,39 @@ export class CartService {
   }
 
   loadCart() {
-    // Extra safety check for localStorage
-    if (isPlatformBrowser(this.platformId)) {
-      this.http.get<CartItem[]>(this.apiUrl).subscribe({
-        next: (items) => this.cartItems.set(items),
-        error: (err) => console.error('Failed to load cart', err)
-      });
-    }
+    this.isLoading.set(true);
+    this.http.get<CartItem[]>(this.apiUrl).subscribe({
+      next: (items) => {
+        this.cartItems.set(items);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        console.error('Failed to load cart', err);
+      }
+    });
   }
 
-  addToCart(productId: string, quantity: number = 1): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add`, { productId, quantity }).pipe(
-      tap((user) => {
-        if (user && user.cart) {
-          this.cartItems.set(user.cart);
-        }
+  addToCart(productId: string, quantity: number = 1): Observable<CartItem[]> {
+    return this.http.post<CartItem[]>(`${this.apiUrl}/add`, { productId, quantity }).pipe(
+      tap((updatedCart) => {
+        this.cartItems.set(updatedCart);
       })
     );
   }
 
-  removeFromCart(productId: string) {
-    this.http.delete<any>(`${this.apiUrl}/remove`, { body: { productId } }).subscribe({
+  removeFromCart(cartItemId: string) {
+    this.http.delete<CartItem[]>(`${this.apiUrl}/remove`, { body: { productId: cartItemId } }).subscribe({
       next: (updatedCart) => this.cartItems.set(updatedCart),
       error: (err) => console.error('Delete failed', err)
     });
   }
 
   updateQuantity(productId: string, change: number) {
-    // We send the change (1 or -1) to the server
-    this.http.patch<any>(`${this.apiUrl}/update-quantity`, { productId, change }).subscribe({
-      next: (updatedCart) => {
-        this.cartItems.set(updatedCart);
-      },
+    this.http.patch<CartItem[]>(`${this.apiUrl}/update-quantity`, { productId, change }).subscribe({
+      next: (updatedCart) => this.cartItems.set(updatedCart),
       error: (err) => console.error('Update failed', err)
     });
-  }
-
-  processCheckout() {
-    // This will be expanded when we create the Orders collection
-    console.log('Sending order to Malinka HQ...', this.cartItems());
   }
 
   clearCart() {

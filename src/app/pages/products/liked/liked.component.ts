@@ -4,6 +4,8 @@ import { CartService } from '../../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common'
+import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-liked',
@@ -11,11 +13,16 @@ import { isPlatformBrowser } from '@angular/common'
   templateUrl: './liked.component.html',
   styleUrl: './liked.component.css'
 })
+
 export class LikedComponent implements OnInit {
   private productsService = inject(ProductsService);
-  
+  private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   private platformId = inject(PLATFORM_ID);
-  items = this.productsService.favoriteItems;
+
+  public items = this.productsService.favoriteItems;
+  public isLoading = this.productsService.isLoading;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -23,7 +30,27 @@ export class LikedComponent implements OnInit {
     }
   }
 
-  toggleLike(productId: string) {
+  toggleLike(productTitle: string, productId: string) {
     this.productsService.toggleFavorite(productId);
+    this.toastService.show('Removed from Wishlist', `${productTitle}`, 'wishlist');
+  }
+
+  addToCart(event: Event, product: any) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!this.authService.isLoggedIn()) {
+      this.toastService.show('Error', `Please log in to add items to Сart!`, 'error');
+      return;
+    }
+
+    this.cartService.addToCart(product._id, 1).subscribe({
+      next: () => {
+        this.toastService.show('Added to Сart', `${product.title}`, 'cart');
+      },
+      error: () => {
+        this.toastService.show('Error', `Could not add items to Сart!`, 'error');
+      }
+    });
   }
 }

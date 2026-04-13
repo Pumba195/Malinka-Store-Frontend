@@ -1,51 +1,87 @@
 <main class="shop-container">
-  <h1 class="shop-title">Malinka Collection</h1>
+
+  <div class="shop-toolbar">
+    <div class="search-box input-wrapper">
+      <label class="floating-label">Search items</label>
+      <input class="input-field" type="text" placeholder="Search delicious items..." (input)="onSearch($event)">
+      <!-- <button class="search-btn btn" >Search</button> -->
+    </div>
+
+    <div class="filter-controls">
+      <div class="input-wrapper">
+        <label class="floating-label">Sort by</label>
+        <select class="select-input select input-fiel" (change)="onSortChange($event)">
+          <option value="newest">Newest first</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="floating-label">Items per page</label>
+        <select (change)="onLimitChange($event)" class="select-input select limit-select input-field">
+          <option value="15">15</option>
+          <option value="30">30</option>
+          <option value="60">60</option>
+        </select>
+      </div>
+    </div>
+    <div class="pagination">
+      <button [disabled]="currentPage === 1" (click)="changePage(-1)" class="page-btn">←</button>
+      <span class="page-info">Page <strong>{{currentPage}}</strong></span>
+      <button [disabled]="products().length < currentLimit" (click)="changePage(1)" class="page-btn">→</button>
+    </div>
+  </div>
 
   @if (errorMessage) {
   <p class="status-message error">{{errorMessage}}</p>
   }
-  @if (products.length === 0 && !errorMessage) {
+  @else if (isLoading && products().length === 0 && !errorMessage) {
   <p class="status-message loading">
     <img src="./icons/loading.gif" alt="loading">
   </p>
-  }
+  } @else {
   <div class="product-grid">
-    @for (product of products; track product) {
+    @for (product of filteredProducts(); track product._id) {
     <div class="product-card">
+      @if (isNew(product.createdAt)) {
+      <span class="new-badge">New</span>
+      }
       <a [routerLink]="['/product', product._id]">
         <div class="product-image">
           <img [src]="product.imageUrl || './misc/no-image.png'" alt="{{product.title}}">
         </div>
+
         <div class="product-info">
           <div class="high-part">
             <div class="title-and-price">
               <h3 class="product-title">{{product.title}}</h3>
               <p class="product-price">{{product.price | currency}}</p>
             </div>
-            <a class="favorite-badge" (click)="toggleLike($event, product._id)">
-              <p [class]="productsService.isFavorite(product._id) ? 'fas fa-heart' : 'far fa-heart'">{{
-                productsService.isFavorite(product._id) ? '♥' : '♡' }}</p>
+            <a class="favorite-badge" (click)="toggleLike($event, product)">
+              <p [class]="productsService.isFavorite(product._id) ? 'fas fa-heart' : 'far fa-heart'">
+                {{ productsService.isFavorite(product._id) ? '♥' : '♡' }}
+              </p>
             </a>
           </div>
 
-
-          <!-- <div class="favorite-badge" (click)="toggleLike($event, product._id)">
-            <i [class]="productsService.isFavorite(product._id) ? 'fas fa-heart' : 'far fa-heart'">Like</i>
-          </div> -->
-          <button class="btn-cart" (click)="addToCart($event, product._id)">
+          <button class="btn-cart btn" (click)="addToCart($event, product)">
             Add to cart
           </button>
         </div>
       </a>
     </div>
+    } @empty {
+    <p class="status-message ">Nothing found for "{{searchQuery()}}"</p>
     }
   </div>
-  <div *ngIf="showToast" class="simple-toast" [class.error]="isError">
-    <span class="toast-icon">{{ isError ? '⚠️' : '🍓' }}</span>
+  }
 
-    <span class="message-text">
-      {{ toastMessage }}
-      <strong *ngIf="clickCount > 1" class="count-badge">x{{ clickCount }}</strong>
-    </span>
+  @if (products().length > 0) {
+  <div class="pagination">
+    <button [disabled]="currentPage === 1" (click)="changePage(-1)" class="page-btn">←</button>
+    <span class="page-info">Page <strong>{{currentPage}}</strong></span>
+    <button [disabled]="products().length < currentLimit" (click)="changePage(1)" class="page-btn">→</button>
   </div>
+  }
 </main>
