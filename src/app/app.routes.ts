@@ -32,8 +32,8 @@ export const routes: Routes = [
             { path: 'orders', component: UserOrdersComponent }
         ]
     },
-    { path: 'cart', component: CartComponent, canActivate: [authGuard] },
-    { path: 'liked', component: LikedComponent, canActivate: [authGuard] },
+    { path: 'cart', component: CartComponent },
+    { path: 'liked', component: LikedComponent },
 
     { path: 'about', component: AboutComponent },
     { path: 'contact', component: ContactComponent },

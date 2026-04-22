@@ -5,6 +5,7 @@ export type ToastType = 'success' | 'error' | 'cart' | 'wishlist';
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   public showToast = false;
+  public animateCounter = false;
   public messageTitle = '';
   public toastMessage = '';
   public isError = false;
@@ -15,35 +16,45 @@ export class ToastService {
   private toastTimeout: any;
 
   show(title: string, message: string = '', type: ToastType = 'success', quantity: number = 1) {
-    this.currentType = type;
-    this.isError = type === 'error';
-    
     const iconMap: Record<ToastType, string> = {
       success: '🍓',
       error: '⚠️',
       cart: '🛒',
       wishlist: '❤️'
     };
-    
-    this.currentIcon = iconMap[type];
 
-    if (this.showToast && this.messageTitle === title && this.toastMessage === message) {
-      this.clickCount += quantity;
+    const isSameToast = this.messageTitle === title && this.toastMessage === message;
+
+    if (this.showToast && !isSameToast) {
+      this.showToast = false;
+      setTimeout(() => {
+        this.applyData(title, message, type, quantity, iconMap);
+      }, 10);
     } else {
-      this.messageTitle = title;
-      this.toastMessage = message;
+      this.applyData(title, message, type, quantity, iconMap, isSameToast);
+    }
+  }
+
+  private applyData(title: string, message: string, type: ToastType, quantity: number, iconMap: any, isSame: boolean = false) {
+    this.currentType = type;
+    this.isError = type === 'error';
+    this.currentIcon = iconMap[type];
+    this.messageTitle = title;
+    this.toastMessage = message;
+
+    if (isSame) {
+      this.clickCount += quantity;
+      this.animateCounter = false;
+      setTimeout(() => this.animateCounter = true, 5);
+    } else {
       this.clickCount = quantity;
+      this.showToast = true;
     }
 
-    this.showToast = true;
-
     if (this.toastTimeout) clearTimeout(this.toastTimeout);
-
     this.toastTimeout = setTimeout(() => {
       this.showToast = false;
       this.clickCount = 0;
-      this.messageTitle = '';
-      this.toastMessage = '';
     }, 3000);
   }
 }

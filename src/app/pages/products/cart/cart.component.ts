@@ -33,15 +33,24 @@ export class CartComponent implements OnInit {
   }
 
   updateQuantity(item: CartItem | undefined, change: number): void {
-    if (!item?.productId?._id) {
-      console.warn('Cannot update quantity: Product ID is missing (item might be deleted from store)');
+    const product = item?.productId;
+    if (!product?._id) {
+      console.warn('Cannot update quantity: Product data missing');
       return;
     }
-    this.cartService.updateQuantity(item?.productId?._id, change);
-    if (change == 1){
-      this.toastService.show('Added to Сart', `${item?.productId?.title}`, 'cart');
-    } else {
-      this.toastService.show('Removed from Сart', `${item?.productId?.title}`, 'cart');
+
+    if (item?.quantity == 1 && change < 0) {
+      this.openConfirmModal(item)
+      return
+    }
+
+    this.cartService.updateQuantity(product._id, change);
+
+    const title = product.title;
+    if (change > 0) {
+      this.toastService.show('Added to Cart', title, 'cart');
+    } else if (change < 0) {
+      this.toastService.show('Removed from Cart', title, 'cart');
     }
   }
 
@@ -68,7 +77,7 @@ export class CartComponent implements OnInit {
   confirmDelete(): void {
     if (this.itemToDelete) {
       this.cartService.removeFromCart(this.itemToDelete._id);
-      this.toastService.show('Removed from Сart', `${this.itemToDelete.productId?.title}`, 'cart', this.itemToDelete.quantity);
+      this.toastService.show('Removed from Cart', `${this.itemToDelete.productId?.title}`, 'cart', this.itemToDelete.quantity);
       this.closeModal();
     }
   }
