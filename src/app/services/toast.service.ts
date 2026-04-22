@@ -14,7 +14,7 @@ export class ToastService {
 
   private toastTimeout: any;
 
-  show(title: string, message: string = '', type: ToastType = 'success') {
+  show(title: string, message: string = '', type: ToastType = 'success', quantity: number = 1) {
     this.currentType = type;
     this.isError = type === 'error';
     
@@ -28,11 +28,11 @@ export class ToastService {
     this.currentIcon = iconMap[type];
 
     if (this.showToast && this.messageTitle === title && this.toastMessage === message) {
-      this.clickCount++;
+      this.clickCount += quantity;
     } else {
       this.messageTitle = title;
       this.toastMessage = message;
-      this.clickCount = 1;
+      this.clickCount = quantity;
     }
 
     this.showToast = true;
