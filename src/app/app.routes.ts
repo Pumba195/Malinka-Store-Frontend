@@ -8,25 +8,23 @@ import { ProductDetailComponent } from './pages/products/product-detail/product-
 import { ProfileComponent } from './pages/account/profile/profile.component';
 import { CartComponent } from './pages/products/cart/cart.component';
 import { LikedComponent } from './pages/products/liked/liked.component';
-import { authGuard } from './interceptors/auth.guard';
+import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 import { UserOrdersComponent } from './pages/account/user-orders/user-orders.component';
 import { ProfileSettingsComponent } from './pages/account/profile-settings/profile-settings.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 
 export const routes: Routes = [
-    {path: '', component: HomeComponent},
-    {path: 'store', component: StoreComponent},
-    {path: 'about', component: AboutComponent},
-    {path: 'contact', component: ContactComponent},
+    { path: '', component: HomeComponent },
+    { path: 'store', component: StoreComponent },
+    { path: 'product/:id', component: ProductDetailComponent },
+    
+    { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+    { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
 
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-
-    {path: 'profile', component: ProfileComponent},
-    {path: 'cart', component: CartComponent},
-    {path: 'liked', component: LikedComponent},
-    { path: 'profile', 
+    { 
+        path: 'profile', 
         component: ProfileComponent, 
         canActivate: [authGuard],
         children: [
@@ -34,6 +32,9 @@ export const routes: Routes = [
             { path: 'orders', component: UserOrdersComponent }
         ]
     },
-    
-    {path: 'product/:id', component: ProductDetailComponent},
+    { path: 'cart', component: CartComponent, canActivate: [authGuard] },
+    { path: 'liked', component: LikedComponent, canActivate: [authGuard] },
+
+    { path: 'about', component: AboutComponent },
+    { path: 'contact', component: ContactComponent },
 ];

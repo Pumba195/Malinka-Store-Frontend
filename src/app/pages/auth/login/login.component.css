@@ -100,3 +100,37 @@ input.ng-invalid.ng-touched {
     display: flex;
     justify-content: center;
 }
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .input-field {
+  padding-right: 45px;
+}
+
+.toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.toggle-btn .eye{
+  height: 24px;
+  filter: brightness(0) invert(0.9);
+}
+
+.toggle-btn:hover {
+    filter: drop-shadow(0 0 5px #ff0022);
+    transform: translateY(-1px);
+}

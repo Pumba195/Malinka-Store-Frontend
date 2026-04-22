@@ -60,6 +60,6 @@ export class AuthService {
       localStorage.removeItem('user');
     }
     this.currentUser.set(null);
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 }

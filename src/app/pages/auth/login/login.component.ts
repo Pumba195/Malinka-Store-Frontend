@@ -23,6 +23,7 @@ export class LoginComponent {
 
   protected errorMessage = '';
   protected loading = false;
+  protected showPassword = false;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -59,5 +60,9 @@ export class LoginComponent {
 
   get f() {
     return this.loginForm.controls as any;
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

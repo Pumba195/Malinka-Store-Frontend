@@ -20,9 +20,11 @@ export class RegisterComponent {
   private router = inject(Router);
   private cartService = inject(CartService);
   private productsService = inject(ProductsService);
+
   protected errorMessage = '';
   protected loading = false;
-
+  protected showPassword = false;
+  
   registerForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
@@ -59,5 +61,9 @@ export class RegisterComponent {
 
   get f() {
     return this.registerForm.controls as any;
+  }
+  
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }
