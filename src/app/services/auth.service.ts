@@ -3,13 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root' 
 })
 
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth'; 
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
+
   private platformId = inject(PLATFORM_ID);
 
   currentUser = signal<any>(this.getUserFromStorage());
